@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "aws-management-functions"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-nhfmnbjl2q3i"
+s3_prefix = "aws-management-functions"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+

@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  aws-management-functions
+
+  SAM Template for aws-management-functions
+
+Globals:
+  Function:
+    Timeout: 10
+
+Resources:
+  StopEC2Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: mgmt_functions/
+      Handler: stop_ec2.lambda_handler
+      Runtime: python3.7
+      Policies:
+        - EC2DescribePolicy: {}
+        - Statement:
+            Effect: Allow
+            Action: 'ec2:Stop*'
+            Resource: '*'
+      Events:
+        StopEC2:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(0 3 * * ? *)'
+            Name: StopSchedule
+            Description: Stop EC2 instances at 10 PM CST
+            Enabled: True
+  StartEC2Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: mgmt_functions/
+      Handler: start_ec2.lambda_handler
+      Runtime: python3.7
+      Policies:
+        - EC2DescribePolicy: {}
+        - Statement:
+            Effect: Allow
+            Action: 'ec2:Start*'
+            Resource: '*'
+      Events:
+        StopEC2:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(0 13 * * ? *)'
+            Name: StartSchedule
+            Description: Start EC2 instances at 8 AM CST
+            Enabled: False
+
+Outputs:
+  StopEC2Function:
+    Description: "Stop EC2 Lambda Function ARN"
+    Value: !GetAtt StopEC2Function.Arn
+  StopEC2FunctionIamRole:
+    Description: "Implicit IAM Role created for Stop EC2 function"
+    Value: !GetAtt StopEC2FunctionRole.Arn
+  StartEC2Function:
+    Description: "Start EC2 Lambda Function ARN"
+    Value: !GetAtt StartEC2Function.Arn
+  StartEC2FunctionIamRole:
+    Description: "Implicit IAM Role created for Start EC2 function"
+    Value: !GetAtt StartEC2FunctionRole.Arn
