@@ -8,13 +8,17 @@ Description: >
 Globals:
   Function:
     Timeout: 10
+    Environment:
+      Variables:
+        EC2_REGION: 'us-east-1'
+        EC2_TAG: 'auto-start-stop'
 
 Resources:
   StopEC2Function:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: mgmt_functions/
-      Handler: stop_ec2.lambda_handler
+      Handler: ec2_functions.stop_lambda_handler
       Runtime: python3.7
       Policies:
         - EC2DescribePolicy: {}
@@ -34,7 +38,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: mgmt_functions/
-      Handler: start_ec2.lambda_handler
+      Handler: ec2_functions.start_lambda_handler
       Runtime: python3.7
       Policies:
         - EC2DescribePolicy: {}
